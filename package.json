@@ -1,0 +1,13 @@
+{
+    "name" : "otr",
+    "description" : "Off-the-Record (OTR) Messaging library",
+    "url" : "http://www.cypherpunks.ca/otr/",
+    "keywords" : ["crypto","otr","privacy"],
+    "author" : "Mokhtar Naamani",
+    "contributors" : ["Mokhtar Naamani <mokhtar.naamani@gmail.com>"],
+    "dependencies" : {},
+    "version" : "0.0.1",
+    "main" : "./lib/otr",
+    "directories" : {},
+    "engines" : { "node" : ">=0.6.0" }
+}

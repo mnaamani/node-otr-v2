@@ -1,0 +1,7 @@
+use apt-get to install the below dependancies:
+
+nodejs
+nodejs-dev
+libotr2
+libotr2-dev
+
