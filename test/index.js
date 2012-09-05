@@ -1,4 +1,5 @@
 var libotr = require('otr');
+console.log("libotr version:",libotr.version());
 
 var alice = new libotr.User({name:'alice',keys:'./db/alice.keys',fingerprints:'./db/alice.fp'});
 var BOB = alice.ConnContext("alice@telechat.org","telechat","BOB");

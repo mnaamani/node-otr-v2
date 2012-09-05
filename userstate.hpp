@@ -4,6 +4,7 @@
 #include "otr.hpp"
 
 extern "C" {
+    #include <gcrypt.h>			//added for libotr-v4
     #include <libotr/userstate.h>
 }
 
