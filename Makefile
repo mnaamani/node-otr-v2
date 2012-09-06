@@ -1,12 +1,3 @@
-NODE_PREFIX = /usr/local
-CXX = g++
-CFLAGS = 
-NODE_CFLAGS := -g -O2 -fPIC -DPIC -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DEV_MULTIPLICITY=0 -I$(NODE_PREFIX)/include/node
-CCLD = $(CXX)
-LDFLAGS = 
-NODE_LDFLAGS = 
-LIBS = -lotr
-
 module:
 	node-waf configure build
 	mkdir -p node_modules
@@ -18,6 +9,8 @@ module:
 
 install:
 	cp -r node_modules/otr ~/.node_libraries/
+uninstall:
+	rm -fr ~/.node_libraries/otr
 clean:
 	node-waf distclean
-	rm -fR node_modules/
+	rm -fr node_modules/

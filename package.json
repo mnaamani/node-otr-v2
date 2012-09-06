@@ -1,6 +1,6 @@
 {
     "name" : "otr",
-    "description" : "Off-the-Record (OTR) Messaging library",
+    "description" : "module to access (OTR) Messaging library v3 functionality.",
     "url" : "http://www.cypherpunks.ca/otr/",
     "keywords" : ["crypto","otr","privacy"],
     "author" : "Mokhtar Naamani",

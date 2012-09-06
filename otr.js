@@ -1,4 +1,7 @@
 var otr=require("./otrnat");
+if(otr.version()!="3.2.1"){
+	console.log("Warning. you do not have the latest version of libotr installed on your system.");
+}
 var util = require('util');
 var events = require('events');
 

@@ -8,8 +8,8 @@ def set_options(opt):
 def configure(conf):
   conf.check_tool('compiler_cxx')
   conf.check_tool('node_addon')
-  conf.env.append_value('LINKFLAGS', ['-l:libotr.so'])
-  conf.check(lib='otr', uselib_store='otr', mandatory=True)
+  conf.env.append_value('LINKFLAGS', ['-l:libotr.so.2'])
+  conf.check(lib='otr', uselib_store='libotr.so.2', mandatory=True)
 
 def build(bld):
   obj = bld.new_task_gen('cxx', 'shlib', 'node_addon')
