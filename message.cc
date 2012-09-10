@@ -149,7 +149,9 @@ Handle<Value> MessageAppOps::Message_Receiving(const Arguments& args) {
         *accountname, *protocol, *sender, *message, &newmessage, &tlvs,NULL,NULL);
 
   context = otrl_context_find(user->userstate_, *sender, *accountname, *protocol, 0, NULL, NULL, NULL);
-  
+
+  //below incoming tlv processing code borrowed from pidgin-otr-3.2.1/otr-plugin.c
+
   if (context) {
     //LOOK FOR REMOTE SIDE DISCONNECT
     tlv = otrl_tlv_find(tlvs, OTRL_TLV_DISCONNECTED);

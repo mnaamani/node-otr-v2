@@ -1,7 +1,7 @@
 {
     "name" : "otr",
-    "description" : "module to access (OTR) Messaging library v3 functionality.",
-    "url" : "http://www.cypherpunks.ca/otr/",
+    "description" : "Off-the-Record Messaging Protocol v2 (binds to native library)",
+    "url" : "https://github.com/mnaamani/node-otr-v2",
     "keywords" : ["crypto","otr","privacy"],
     "author" : "Mokhtar Naamani",
     "contributors" : ["Mokhtar Naamani <mokhtar.naamani@gmail.com>"],
@@ -9,5 +9,6 @@
     "version" : "0.0.1",
     "main" : "./lib/otr",
     "directories" : {},
+    "license": 'GPLv2'
     "engines" : { "node" : ">=0.6.0" }
 }
