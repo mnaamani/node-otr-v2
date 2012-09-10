@@ -9,6 +9,6 @@
     "version" : "0.0.1",
     "main" : "./lib/otr",
     "directories" : {},
-    "license": 'GPLv2'
+    "license": "GPLv2",
     "engines" : { "node" : ">=0.6.0" }
 }
