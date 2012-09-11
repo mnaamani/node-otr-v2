@@ -1,4 +1,4 @@
-# Off-the-Record messaing module for Nodejs (protocol v2)
+# Off-the-Record messaging module for Nodejs (protocol v2)
 
 This module exposes an OO Evented API which wraps the native libotr v2 installed.
 
@@ -37,7 +37,7 @@ OTRChannel
 
 A very experimental p2p OTR messaging application..
 
-	https://github.com/mnaamani/node-telehash/blob/master/experiment/otr-talk.js
+https://github.com/mnaamani/node-telehash/blob/master/experiment/otr-talk.js
 
 ## License
 	
@@ -45,5 +45,5 @@ GPLv2
 
 ## Links
 
-	http://www.cypherpunks.ca/otr/
+http://www.cypherpunks.ca/otr/
 	
