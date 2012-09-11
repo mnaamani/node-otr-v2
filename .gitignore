@@ -1,3 +1,4 @@
+db/*.fp
 build/
 node_modules/
 .lock-wscript
