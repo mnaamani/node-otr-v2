@@ -16,10 +16,19 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
+var debug_mode = false;
+exports.debugOn = function(){
+    debug_mode = true;
+};
+exports.debugOff = function(){
+    debug_mode = false;
+};
+function debug(msg){
+    if(debug_mode) console.error(msg);
+}
 var otr=require("./otrnat");
 if(otr.version()!="3.2.1"){
-	console.log("Warning. you do not have the latest version of libotr installed on your system.");
+	console.error("Warning. You are not using the latest version of libotr.");
 }
 var util = require('util');
 var events = require('events');
@@ -131,29 +140,37 @@ function OtrEventHandler( otrChannel ){
     //console.error(o.EVENT);
     switch(o.EVENT){
         case "smp_request":
+            debug(o.question);
             emit(o.EVENT,o.question);
             return;
         case "smp_complete":
+            debug(o.EVENT);
             emit(o.EVENT);
             return;
         case "smp_failed":
+            debug(o.EVENT);
             emit(o.EVENT);
             return;
         case "smp_aborted":
+            debug(o.EVENT);
             emit(o.EVENT);
             return;
         case "display_otr_message":
+            debug(o.message);
             emit(o.EVENT,o.message);
             return;
         case "is_logged_in":
             return 1;
         case "gone_secure":
+            debug(o.EVENT);
             emit(o.EVENT);
             return;
         case "gone_insecure":
+            debug(o.EVENT);
             emit(o.EVENT);
             return;
         case "remote_disconnected":
+            debug(o.EVENT);
             emit(o.EVENT);
             return;
         case "policy":                  
@@ -168,24 +185,31 @@ function OtrEventHandler( otrChannel ){
             if(!otrChannel.parameters) return 1450;            
             return otrChannel.parameters.MTU || 1450;
         case "inject_message":
+            //debug(o.message);
             emit(o.EVENT,o.message);
             return;
         case "create_privkey":
+            debug(o.EVENT);
             emit(o.EVENT);
             return;
         case "notify":
+            debug(o.title);
             emit(o.EVENT,o.title,o.primary,o.secondary);
             return;
         case "log_message":
+            debug(o.message);
             emit(o.Event,o.message);
             return;
         case "new_fingerprint":
+            debug(o.fingerprint);
             emit(o.EVENT,o.fingerprint);
             return;
-        case "write_fingerprints":            
+        case "write_fingerprints":
+            debug(o.EVENT);
             otrChannel.user.writeFingerprints();
             return;
         case "still_secure":
+            debug(o.EVENT);
             emit(o.EVENT);
             return;
         default:
