@@ -56,6 +56,10 @@ function User( config ){
     }catch(e){ console.error("Warning Reading Fingerprints:",e);}
 }
 
+User.prototype.generateKey = function(accountname,protocol,callback){
+    this.state.generateKey(this.keys,accountname,protocol,callback);
+}
+
 User.prototype.ConnContext = function(accountname, protocol, recipient){    
     return new otr.ConnContext(this.state,accountname,protocol,recipient);
 }
