@@ -26,20 +26,27 @@ exports.debugOff = function(){
 function debug(msg){
     if(debug_mode) console.error(msg);
 }
+
+//load node C++ native module
 var otr=require("./otrnat");
+
 if(otr.version()!="3.2.1"){
-	console.error("Warning. You are not using the latest version of libotr.");
+	console.error("Warning. You are not using the latest version of libotr on your system.");
 }
+
 var util = require('util');
 var events = require('events');
 
+//low level - wrappers to C API
 exports.version = otr.version;
 exports.UserState = otr.UserState;
 exports.ConnContext = otr.ConnContext;
 exports.MessageAppOps = otr.MessageAppOps;
 
+//high level - javascript API
 exports.User = User;
 exports.OTRChannel = OTRChannel;
+exports.POLICY = POLICY;
 
 util.inherits(OTRChannel, events.EventEmitter);
 
@@ -178,15 +185,14 @@ function OtrEventHandler( otrChannel ){
             emit(o.EVENT);
             return;
         case "policy":                  
-            //OTRL_POLICY_DEFAULT == OTRL_POLICY_OPPORTUNISTIC == 55
-            //OTRL_POLICY_ALWAYS == 59
-            if(!otrChannel.parameters) return 59;            
-            return otrChannel.parameters.policy || 59;
+            if(!otrChannel.parameters) return POLICY("DEFAULT");
+            if(typeof otrChannel.parameters.policy == 'number' ) return otrChannel.parameters.policy;//todo: validate policy
+            return POLICY("DEFAULT");
         case "update_context_list":
             emit(o.EVENT);
             return;
         case "max_message_size":
-            if(!otrChannel.parameters) return 1450;            
+            if(!otrChannel.parameters) return 1450; //for UDP packets..           
             return otrChannel.parameters.MTU || 1450;
         case "inject_message":
             //debug(o.message);
@@ -222,3 +228,26 @@ function OtrEventHandler( otrChannel ){
     }
  });
 }
+
+/* --- libotr-3.2.1/src/proto.h   */
+var _policy = {
+    'NEVER':0x00,
+    'ALLOW_V1': 0x01,
+    'ALLOW_V2': 0x02,
+    'REQUIRE_ENCRYPTION': 0x04,
+    'SEND_WHITESPACE_TAG': 0x08,
+    'WHITESPACE_START_AKE': 0x10,
+    'ERROR_START_AKE': 0x20
+};
+
+_policy['VERSION_MASK'] = _policy['ALLOW_V1']|_policy['ALLOW_V2'];
+_policy['OPPORTUNISTIC'] =  _policy['ALLOW_V1']|_policy['ALLOW_V2']|_policy['SEND_WHITESPACE_TAG']|_policy['WHITESPACE_START_AKE']|_policy['ERROR_START_AKE'];
+_policy['MANUAL'] = _policy['ALLOW_V1']|_policy['ALLOW_V2'];
+_policy['ALWAYS'] = _policy['ALLOW_V1']|_policy['ALLOW_V2']|_policy['REQUIRE_ENCRYPTION']|_policy['WHITESPACE_START_AKE']|_policy['ERROR_START_AKE'];
+_policy['DEFAULT'] = _policy['OPPORTUNISTIC']
+
+function POLICY(p){  
+    return _policy[p];
+};
+
+

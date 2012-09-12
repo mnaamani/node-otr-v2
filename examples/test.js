@@ -9,7 +9,7 @@ var alice = new libotr.User({name:'alice',keys:'./db/alice.keys',fingerprints:'.
 var BOB = alice.ConnContext("alice@telechat.org","telechat","BOB");
 
 //setup an OTR communication channel with Bob
-var otrchan_a = new libotr.OTRChannel(alice, BOB,{secret:'s3cr37'});
+var otrchan_a = new libotr.OTRChannel(alice, BOB,{policy:libotr.POLICY("DEFAULT"),secret:'s3cr37'});
 
 var bob = new libotr.User({name:'bob',keys:'./db/bob.keys',fingerprints:'./db/bob.fp'});
 var ALICE = bob.ConnContext("bob@telechat.org","telechat","ALICE");
