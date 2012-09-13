@@ -165,11 +165,7 @@ function OtrEventHandler( otrChannel ){
         case "smp_aborted":
             debug(o.EVENT);
             emit(o.EVENT);
-            return;
-        case "display_otr_message":
-            debug(o.message);
-            emit(o.EVENT,o.message);
-            return;
+            return;        
         case "is_logged_in":
             return 1;
         case "gone_secure":
@@ -202,6 +198,10 @@ function OtrEventHandler( otrChannel ){
             debug(o.EVENT);
             emit(o.EVENT);
             return;
+        case "display_otr_message":
+            debug(o.message);
+            emit(o.EVENT,o.message);
+            return;            
         case "notify":
             debug(o.title);
             emit(o.EVENT,o.title,o.primary,o.secondary);

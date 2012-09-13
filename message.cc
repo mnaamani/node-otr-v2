@@ -71,6 +71,7 @@ Handle<Value> MessageAppOps::New(const Arguments& args) {
     obj->messageops_->inject_message=op_inject_message;
     obj->messageops_->notify=op_notify;
     obj->messageops_->display_otr_message=op_display_otr_message;
+    //obj->messageops_->display_otr_message=NULL;//library will use notify() instead.
     obj->messageops_->update_context_list=op_update_context_list;
     obj->messageops_->protocol_name=op_protocol_name;
     obj->messageops_->protocol_name_free=op_protocol_name_free;
@@ -480,7 +481,8 @@ void MessageAppOps::op_inject_message(void *opdata, const char *accountname, con
 
 void MessageAppOps::op_notify(void *opdata, OtrlNotifyLevel level, const char *accountname, const char *protocol, const char *username, const char *title,
 	const char *primary, const char *secondary){
-
+    //This type of notification is more suitable for our evented JS API.
+    
     MessageAppOps* ops = (MessageAppOps*)opdata;
     
     Local<Object> eobj = Object::New();
@@ -491,14 +493,24 @@ void MessageAppOps::op_notify(void *opdata, OtrlNotifyLevel level, const char *a
     eobj->Set(String::NewSymbol("title"), String::New(title));
     eobj->Set(String::NewSymbol("primary"), String::New(primary));
     eobj->Set(String::NewSymbol("secondary"), String::New(secondary));
-
+    /* TODO:pass the OtrlNofifyLevel level along.. */
+    /*
+    typedef enum {
+        OTRL_NOTIFY_ERROR,
+        OTRL_NOTIFY_WARNING,
+        OTRL_NOTIFY_INFO
+    } OtrlNotifyLevel;
+    */
+    
     QueEvent(eobj,ops->ui_event_);
 }
 
-int MessageAppOps::op_display_otr_message(void *opdata, const char *accountname, const char *protocol, const char *username, const char *msg){    
-    //return 1;//will run notify() instead
-    MessageAppOps* ops = (MessageAppOps*)opdata;
+int MessageAppOps::op_display_otr_message(void *opdata, const char *accountname, const char *protocol, const char *username, const char *msg){   
+    //Messages received here are intended to be displayed inline in a chat session
+    //as human readable message
     
+    MessageAppOps* ops = (MessageAppOps*)opdata;
+   
     Local<Object> eobj = Object::New();
     eobj->Set(String::NewSymbol("EVENT"),String::New("display_otr_message"));
     eobj->Set(String::NewSymbol("accountname"), String::New(accountname));
@@ -507,8 +519,10 @@ int MessageAppOps::op_display_otr_message(void *opdata, const char *accountname,
     eobj->Set(String::NewSymbol("message"), String::New(msg));
 
     QueEvent(eobj,ops->ui_event_);
-
-    return 0;    
+    
+    /* for libotr to fire op_notify() as well, return non-zero */
+    return 1;
+    return 0;
 }
 
 void MessageAppOps::op_update_context_list(void *opdata){    
