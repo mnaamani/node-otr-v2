@@ -27,16 +27,18 @@ Run a quick test
 ## API
 The module exports the following functions:
 
-methods:
 * version()
 * POLICY()
 
-constructors:
+[high-level API]
 * User()
+* OTRChannel() : [EventEmitter]
+
+[lower-level API]
 * UserState()
 * ConnContext()
 * MessageAppOps()
-* OTRChannel() : EventEmitter
+
 
 ## version()
 The version() function will return the version of the native libotr.so loaded by nodejs.
@@ -51,7 +53,7 @@ The policy is used as a parameter in OTRChannel.
 
 	//available policies
     'NEVER'
-    'ALLOW_V1',
+    'ALLOW_V1'
     'ALLOW_V2'
     'REQUIRE_ENCRYPTION'
     'SEND_WHITESPACE_TAG'
@@ -100,7 +102,7 @@ and fingerprints to the file system, as well as methods to generate them.
 
 
 ### userstate.generateKey(path_to_keys_file, accountname, protocol, [callback])
-generateKey() will create a new OTR key for provided accountname/protocol (overwriting existing key).
+generateKey() will asynchronously generate a new OTR key for provided accountname/protocol (overwriting existing key).
 The newly generated key will be stored stored in the userstate. When the process is complete the 
 userstate/keys are written out to file.
 
@@ -111,15 +113,6 @@ userstate/keys are written out to file.
 			console.log(err);
 		}
 	});
-
-### userstate.readKeys(path_to_keys_file, [callback])
-Asynchronously reads the stored keys into the userstate.
-
-### userstate.readFingerprints(path_to_fingerprints_file, [callback])
-Asynchronously reads the stored fingerprints into the userstate.
-
-### userstate.writeFingerprints(path_to_fingerprints_file, [callback])
-Asynchronously writes out the fingerprints in userstate to file.
 
 ### userstate.fingerprint(accountname,protocol)
 Returns the fingerprint of the key associated with accountname and protocol of the form:
@@ -133,11 +126,24 @@ Returns an array of account objects:
 	    protocol: 'xmpp',
 	    fingerprint: '65D366AF CF9B065F 41708CB0 1DC26F61 D3DF5935' } ]
 
-Synchronous versions of above methods:
-
 ### userstate.readKeysSync(path_to_keys_file)
+Synchronously reads the stored keys into the userstate.
+
 ### userstate.readFingerprintsSync(path_to_fingerprints_file)
+Synchronously reads the stored fingerprints into the userstate.
+
 ### userstate.writeFingerprintsSync(path_to_fingerprints_file)
+Synchronously writes out the fingerprints in userstate to file.
+
+(Async versions.. Not Recommended to Use..)
+### userstate.readKeys(path_to_keys_file, [callback])
+Asynchronously reads the stored keys into the userstate.
+
+### userstate.readFingerprints(path_to_fingerprints_file, [callback])
+Asynchronously reads the stored fingerprints into the userstate.
+
+### userstate.writeFingerprints(path_to_fingerprints_file, [callback])
+Asynchronously writes out the fingerprints in userstate to file.
 
 example code: https://github.com/mnaamani/node-telehash/blob/master/experiment/otr-keymanager.js
 
@@ -221,14 +227,14 @@ return 'true' only if fingerprint of remote side has been authenticated/verified
 * create_privkey() - a private key for account/protocol specified was not found and needs to be created.
 * new_fingerprint(fingerprint) - first time we are seeing remote party's fingerprint. This is a que to begin authentication.
 
-* smp_request(question) - remote party has started a SMP authentication. (optionally with a question)
+* smp_request(question) - remote party has started a SMP authentication. (possibly with a question)
 * smp_complete() - indicates SMP authentication completed successfully.
 * smp_failed() - SMP failed (usually remote party doesn't know the secret)
 * smp_aborted() - SMP (something went wrong at the protocol level)
 
 * remote_disconnected() - remote side has closed() the channel
-* update_context_list()
-* shutdown() - channel is being shutdown.
+* update_context_list() - fired when context changes (inteded mostly for UI updates)
+* shutdown() - channel was forcefully closed.
 
 * display_otr_message(msg) //human readable notification message
 * notify(title,primary,secondary) //notification (fired after display_otr_message for same notification message)
