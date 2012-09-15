@@ -73,7 +73,7 @@ User.prototype.ConnContext = function(accountname, protocol, recipient){
 
 User.prototype.writeFingerprints = function(){
     console.error("Writing Fingerprints to:",this.fingerprints);
-    this.state.writeFingerprints(this.fingerprints);
+    this.state.writeFingerprintsSync(this.fingerprints);
 }
 
 function OTRChannel(user, context, parameters){
