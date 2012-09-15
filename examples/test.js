@@ -1,9 +1,9 @@
 var libotr = require('otr');
 console.log("libotr version:",libotr.version());
 //libotr.debugOn();
-
+var keys_dir = __dirname + "/keys";
 //create user alice, specify encryption keys and fingerprints files
-var alice = new libotr.User({name:'alice',keys:'./db/alice.keys',fingerprints:'./db/alice.fp'});
+var alice = new libotr.User({name:'alice',keys:keys_dir+'/alice.keys',fingerprints:keys_dir+'/alice.fp'});
 
 //create a connection context used to identify communication with Bob
 var BOB = alice.ConnContext("alice@telechat.org","telechat","BOB");
@@ -11,7 +11,7 @@ var BOB = alice.ConnContext("alice@telechat.org","telechat","BOB");
 //setup an OTR communication channel with Bob
 var otrchan_a = new libotr.OTRChannel(alice, BOB,{policy:libotr.POLICY("ALWAYS"),secret:'s3cr37'});
 
-var bob = new libotr.User({name:'bob',keys:'./db/bob.keys',fingerprints:'./db/bob.fp'});
+var bob = new libotr.User({name:'bob',keys:keys_dir+'/bob.keys',fingerprints:keys_dir+'/bob.fp'});
 var ALICE = bob.ConnContext("bob@telechat.org","telechat","ALICE");
 var otrchan_b = new libotr.OTRChannel(bob, ALICE,{policy:libotr.POLICY("ALWAYS"),secret:'s3cr37'});
 
@@ -57,16 +57,18 @@ otrchan_b.on("message",function(msg){
 
 //connection is encrypted..
 otrchan_a.on("gone_secure",function(){
-    //if note previously authenticated (fingerpring verified do it now)
+    //if fingerprint not previously authenticated, do it now
     if(this.context.trust!="smp"){
-        console.log("doing SMP authentication to verify keys...");
-        this.start_smp();    
+        console.log("Alice initiating SMP authentication to verify keys...");
+        this.start_smp();
     }
 });
 
 otrchan_b.on("smp_request",function(){
+    console.log("Bob responding to SMP request.");
     this.respond_smp();    
 });
+
 
 //alice sends a message to bob
 otrchan_a.send("Hello, World!");

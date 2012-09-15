@@ -1,9 +1,9 @@
 var libotr = require('otr');
 var dgram = require('dgram');
-
+var keys_dir = __dirname+"/keys";
 var ALLOW_NEW_RELATIONSHIPS = true;
 
-var bob = new libotr.User({name:'bob',keys:'./db/bob.keys',fingerprints:'./db/bob.fp'});
+var bob = new libotr.User({name:'bob',keys:keys_dir+'/bob.keys',fingerprints:keys_dir+'/bob.fp'});
 var ALICE = bob.ConnContext("bob@telechat.org","telechat","ALICE");
 var otrchan = new libotr.OTRChannel(bob, ALICE, {    
     policy:59,

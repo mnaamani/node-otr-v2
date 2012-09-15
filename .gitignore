@@ -1,4 +1,4 @@
-db/*.fp
+examples/keys/*.fp
 build/
 node_modules/
 .lock-wscript

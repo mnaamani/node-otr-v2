@@ -1,21 +1,20 @@
 var otr=require("otr");
 console.log("libotr version:",otr.version());
-
 var users = {
     alice: new otr.UserState(),
     bob: new otr.UserState()
 };
 
 users.alice.conf ={
-    keys: "./db/alice.keys",
-    fingerprints: "./db/alice.fp",
+    keys: __dirname+"/keys/alice.keys",
+    fingerprints: __dirname+"/keys/alice.fp",
     account: "alice@telechat.org",
     proto: "telechat"   
 };
 
 users.bob.conf={
-    keys: "./db/bob.keys",
-    fingerprints: "./db/bob.fp",
+    keys: __dirname+"/keys/bob.keys",
+    fingerprints: __dirname+"/keys/bob.fp",
     account: "bob@telechat.org",
     proto: "telechat"    
 };
