@@ -151,7 +151,7 @@ function OtrEventHandler( otrChannel ){
     //console.error(o.EVENT);
     switch(o.EVENT){
         case "smp_request":
-            debug(o.question);
+            if(o.question) debug("SMP Question:"+o.question);
             emit(o.EVENT,o.question);
             return;
         case "smp_complete":
@@ -167,7 +167,7 @@ function OtrEventHandler( otrChannel ){
             emit(o.EVENT);
             return;        
         case "is_logged_in":
-            //TODO:function callback for now assume remote party is always excpected to be online
+            //TODO:function callback. for now remote party is always assumed to be online
             return 1;
         case "gone_secure":
             debug(o.EVENT);
@@ -210,7 +210,7 @@ function OtrEventHandler( otrChannel ){
             return;
         case "log_message":
             debug("OTR DEBUG:"+o.message);
-            emit(o.Event,o.message);
+            emit(o.EVENT,o.message);
             return;
         case "new_fingerprint":
             debug(o.fingerprint);
