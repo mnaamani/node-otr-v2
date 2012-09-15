@@ -49,7 +49,7 @@ The policy is used as a parameter in OTRChannel.
 	var libotr = require("otr");
 	var policy = libotr.POLICY("DEFAULT");
 
-	//You can select from below policies
+	//available policies
     'NEVER'
     'ALLOW_V1',
     'ALLOW_V2'
@@ -153,13 +153,13 @@ Or from a User object (alice):
 
     var ctx = alice.ConnContext("alice@jabber.org","xmpp","BOB");
 
-The following properties of the ConnContext object are exposed:
+The following properties of the ConnContext object are exposed (Read-Only):
 
 * protocol: string: eg. "xmpp"
 * username: string: name we have given to the recipient, "BOB"
 * accountname: string: account name of the otr key, eg. "alice@jabber.org"
 * fingerprint: string: active fingerprint - of recipient's key
-* protocol_version: number: otr protocol version no. in use, eg. 2
+* protocol_version: number: otr protocol version in use, eg. 2
 * msgstate: number: 0 = plaintext, 1 = encrypted
 * smstate: number: current state of the SMP (Socialist Millionaire's Protocol)
 * trust: string: 'smp' if recipient's fingerprint has been verified by SMP.
@@ -210,25 +210,25 @@ return 'true' only if fingerprint of remote side has been authenticated/verified
 
 ### Events
 
-* message(msg)
+* message(msg) - msg from recipient to be displayed to the user.
 
-* inject_message(msg_fragment)
+* inject_message(msg_fragment) - msg_fragment to be sent down the communication channel to recipient.
 
-* gone_secure()
-* gone_insecure()
-* still_secure()
+* gone_secure() - message exchange is now encrypted.
+* gone_insecure() - message exchange is now in plain text.
+* still_secure() - encryption re-negotiated. message exchange is encrypted.
 
-* create_privkey()
-* new_fingerprint(fingerprint)
+* create_privkey() - a private key for account/protocol specified was not found and needs to be created.
+* new_fingerprint(fingerprint) - first time we are seeing remote party's fingerprint. This is a que to begin authentication.
 
-* smp_request(question)
-* smp_complete()
-* smp_failed()
-* smp_aborted()
+* smp_request(question) - remote party has started a SMP authentication. (optionally with a question)
+* smp_complete() - indicates SMP authentication completed successfully.
+* smp_failed() - SMP failed (usually remote party doesn't know the secret)
+* smp_aborted() - SMP (something went wrong at the protocol level)
 
-* remote_disconnected()
+* remote_disconnected() - remote side has closed() the channel
 * update_context_list()
-* shutdown()
+* shutdown() - channel is being shutdown.
 
 * display_otr_message(msg) //human readable notification message
 * notify(title,primary,secondary) //notification (fired after display_otr_message for same notification message)
@@ -245,7 +245,7 @@ return 'true' only if fingerprint of remote side has been authenticated/verified
 
 
 ## Otr-talk
-A very experimental p2p OTR messaging application..
+A very experimental p2p OTR messaging application.. [telehash + ENet + OTRv2] = free + private communication
 
 https://github.com/mnaamani/node-telehash/blob/master/experiment/otr-talk.js
 
