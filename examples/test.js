@@ -1,6 +1,14 @@
 var libotr = require('otr');
 console.log("libotr version:",libotr.version());
-//libotr.debugOn();
+
+var TEST_PASSED=false;
+
+var verbose = true;//TODO: read command line param -v / --verbose 
+
+if(verbose){
+    libotr.debugOn();
+}
+
 var keys_dir = __dirname + "/keys";
 //create user alice, specify encryption keys and fingerprints files
 var alice = new libotr.User({name:'alice',keys:keys_dir+'/alice.keys',fingerprints:keys_dir+'/alice.fp'});
@@ -24,7 +32,7 @@ console.log(ALICE.accountname,"<==>",BOB.accountname);
 console.log(otrchan_a);
 console.log(otrchan_b);
 
-//simulate a connection between two parties
+//simulate a network connection between two parties
 otrchan_a.on("inject_message",function(msg){
 	otrchan_b.recv(msg);
 });
@@ -36,8 +44,7 @@ otrchan_b.on("inject_message",function(msg){
 //output incoming messages to console
 otrchan_a.on("message",function(msg){
     if(this.isEncrypted()) {
-        console.log('encrypted: Bob->Alice: ', msg);
-        if(TEST_PASSED) exit_test("");
+        console.log('encrypted: Bob->Alice: ', msg);        
     }else{
         //policy is set to ALWAYS so we should not get any unencrypted messages!
         console.log('not-encrypted!!!: Bob->Alice: ',msg);
@@ -45,14 +52,24 @@ otrchan_a.on("message",function(msg){
 });
 
 //output incoming messages to console
-otrchan_b.on("message",function(msg){
+otrchan_b.on("message",function(msg){    
     if(this.isEncrypted()) {
         console.log('encrypted: Alice->Bob: ', msg);
-        if(TEST_PASSED) exit_test("");
     }else{
         //policy is set to ALWAYS so we should not get any unencrypted messages!
         console.log('not-encrypted!!!: Alice->Bob: ',msg);
     }
+});
+
+//will get fired because we are manually closing otrchan_b
+otrchan_b.on("shutdown",function(){
+    console.log("Bob's channel shutting down.");
+});
+
+//because otrchan_b was closed otrchan_a get a remote_disconnect event.
+otrchan_a.on("remote_disconnected",function(){
+    console.log("Bob disconnected");
+    exit_test("");
 });
 
 //connection is encrypted..
@@ -71,16 +88,15 @@ otrchan_b.on("smp_request",function(){
 
 
 //alice sends a message to bob
-otrchan_a.send("Hello, World!");
-
-var TEST_PASSED=false;
+otrchan_a.send("Hello, World!"); //will get reset encrypted
 
 var loop = setInterval(function(){
     if(otrchan_a.isEncrypted() && otrchan_a.isAuthenticated()){
         console.log("Finger print verification successful");    
-        TEST_PASSED=true;
-        if(loop) clearInterval(loop);
-        otrchan_b.send("Meet me at midnight...near the docks...");        
+        TEST_PASSED=true;        
+        if(loop) clearInterval(loop);        
+        //otrchan_b.send("Meet me at midnight...near the docks...");                
+        otrchan_b.close();
     }
 },500);
 

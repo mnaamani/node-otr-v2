@@ -167,6 +167,7 @@ function OtrEventHandler( otrChannel ){
             emit(o.EVENT);
             return;        
         case "is_logged_in":
+            //TODO:function callback for now assume remote party is always excpected to be online
             return 1;
         case "gone_secure":
             debug(o.EVENT);
@@ -185,13 +186,14 @@ function OtrEventHandler( otrChannel ){
             if(typeof otrChannel.parameters.policy == 'number' ) return otrChannel.parameters.policy;//todo: validate policy
             return POLICY("DEFAULT");
         case "update_context_list":
+            debug(o.EVENT);
             emit(o.EVENT);
             return;
         case "max_message_size":
             if(!otrChannel.parameters) return 1450; //for UDP packets..           
             return otrChannel.parameters.MTU || 1450;
         case "inject_message":
-            //debug(o.message);
+            //debug("INJECT:"+o.message);
             emit(o.EVENT,o.message);
             return;
         case "create_privkey":
@@ -199,15 +201,15 @@ function OtrEventHandler( otrChannel ){
             emit(o.EVENT);
             return;
         case "display_otr_message":
-            debug(o.message);
+            debug("OTR_MESSAGE:"+o.message);
             emit(o.EVENT,o.message);
             return;            
         case "notify":
-            debug(o.title);
+            debug("OTR_NOTIFY:"+o.title+"-"+o.primary);
             emit(o.EVENT,o.title,o.primary,o.secondary);
             return;
         case "log_message":
-            debug(o.message);
+            debug("OTR DEBUG:"+o.message);
             emit(o.Event,o.message);
             return;
         case "new_fingerprint":
