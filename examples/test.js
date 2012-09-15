@@ -21,7 +21,7 @@ var otrchan_a = new libotr.OTRChannel(alice, BOB,{policy:libotr.POLICY("ALWAYS")
 
 var bob = new libotr.User({name:'bob',keys:keys_dir+'/bob.keys',fingerprints:keys_dir+'/bob.fp'});
 var ALICE = bob.ConnContext("bob@telechat.org","telechat","ALICE");
-var otrchan_b = new libotr.OTRChannel(bob, ALICE,{policy:libotr.POLICY("ALWAYS"),secret:'s3cr37'});
+var otrchan_b = new libotr.OTRChannel(bob, ALICE,{policy:libotr.POLICY("ALWAYS")});
 
 console.log("Alice's OTR fingerprint:",alice.state.fingerprint("alice@telechat.org","telechat"));
 console.log("Bob's OTR fingerprint:",bob.state.fingerprint("bob@telechat.org","telechat"));
@@ -31,7 +31,7 @@ console.log(ALICE.accountname,"<==>",BOB.accountname);
 //dump the OTR channel objects
 console.log(otrchan_a);
 console.log(otrchan_b);
-
+    
 //simulate a network connection between two parties
 otrchan_a.on("inject_message",function(msg){
 	otrchan_b.recv(msg);
@@ -83,7 +83,7 @@ otrchan_a.on("gone_secure",function(){
 
 otrchan_b.on("smp_request",function(){
     console.log("Bob responding to SMP request.");
-    this.respond_smp();    
+    this.respond_smp('s3cr37');
 });
 
 
@@ -92,7 +92,9 @@ otrchan_a.send("Hello, World!"); //will get reset encrypted
 
 var loop = setInterval(function(){
     if(otrchan_a.isEncrypted() && otrchan_a.isAuthenticated()){
-        console.log("Finger print verification successful");    
+        console.log("Finger print verification successful");
+        dumpConnContext(otrchan_a,"Alice's ConnContext:");
+        dumpConnContext(otrchan_b,"Bob's ConnContext:");   
         TEST_PASSED=true;        
         if(loop) clearInterval(loop);        
         //otrchan_b.send("Meet me at midnight...near the docks...");                
