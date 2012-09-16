@@ -259,7 +259,14 @@ https://github.com/mnaamani/node-telehash/blob/master/experiment/otr-talk.js
 GPLv2
 
 ## Links
+The Excellent OTR Messaging software:
 http://www.cypherpunks.ca/otr/
+
+Great guide for writing C++ node.js extensions:
+http://kkaefer.github.com/node-cpp-modules/
+
+Very useful set of tools when working with v8/Node:
+http://code.google.com/p/v8-juice/wiki/V8Convert
 
 ## TODO
 
