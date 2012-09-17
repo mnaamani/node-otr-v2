@@ -81,10 +81,11 @@ Handle<Value> UserState::Destroy(const Arguments &args){
   UserState* obj = ObjectWrap::Unwrap<UserState>(args.This());
   if(obj->userstate_!=NULL) otrl_userstate_free(obj->userstate_);
   obj->userstate_ = NULL;
+  return scope.Close(Undefined());
 }
 
 Handle<Value> UserState::WrapUserState(OtrlUserState userstate)
-{        
+{
         v8::Local<v8::Object> o = constructor->InstanceTemplate()->NewInstance();
         UserState *obj = node::ObjectWrap::Unwrap<UserState>(o);
         obj->userstate_ = userstate;
