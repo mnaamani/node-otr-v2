@@ -10,9 +10,12 @@ Still a work in progress..
 
 ## Building the module
 
-Required packages
+Required tools:
 
-	sudo apt-get install nodejs nodejs-dev libotr2 libotr2-dev
+	$ apt-get install nodejs nodejs-dev libotr2 libotr2-dev
+
+node-gyp:
+	$ npm install -g node-gyp
 
 Build and install the node module (locally):
 
