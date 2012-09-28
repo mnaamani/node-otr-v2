@@ -9,7 +9,9 @@ module:
 	cp build/Release/lib.target/otrnat.node node_modules/otr/lib
 
 install:
+	mkdir -p ~/.node_libraries/otr
 	cp -r node_modules/otr ~/.node_libraries/
+
 uninstall:
 	rm -fr ~/.node_libraries/otr
 clean:
