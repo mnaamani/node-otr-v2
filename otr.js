@@ -190,8 +190,8 @@ function OtrEventHandler( otrChannel ){
             emit(o.EVENT);
             return;
         case "max_message_size":
-            if(!otrChannel.parameters) return 1450; //for UDP packets..           
-            return otrChannel.parameters.MTU || 1450;
+            if(!otrChannel.parameters) return 0; //No fragmentation
+            return otrChannel.parameters.MTU || 0;//No fragmentation
         case "inject_message":
             //debug("INJECT:"+o.message);
             emit(o.EVENT,o.message);

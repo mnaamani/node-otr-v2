@@ -609,7 +609,7 @@ int MessageAppOps::op_max_message_size(void *opdata, ConnContext *context){
         node::FatalException(try_catch);
     }
     
-    if(!result->IsNumber()) return 1450;//default max message size    
+    if(!result->IsNumber()) return 0;//default no fragmentation
     return (int)result->NumberValue();
 }
 
