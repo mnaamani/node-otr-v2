@@ -1,4 +1,4 @@
-var libotr = require('otr');
+var libotr = require('otr3');
 var dgram = require('dgram');
 
 var ALLOW_NEW_RELATIONSHIPS = true;

@@ -1,4 +1,4 @@
-var libotr = require('otr');
+var libotr = require('otr3');
 var dgram = require('dgram');
 var keys_dir = __dirname+"/keys";
 var ALLOW_NEW_RELATIONSHIPS = true;

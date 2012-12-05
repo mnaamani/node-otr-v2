@@ -1,4 +1,4 @@
-var libotr = require('otr');
+var libotr = require('otr3');
 console.log("libotr version:",libotr.version());
 
 var TEST_PASSED=false;

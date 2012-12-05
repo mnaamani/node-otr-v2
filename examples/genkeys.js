@@ -1,4 +1,4 @@
-var otr=require("otr");
+var otr=require("otr3");
 console.log("libotr version:",otr.version());
 var users = {
     alice: new otr.UserState(),
