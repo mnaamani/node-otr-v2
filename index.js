@@ -28,7 +28,7 @@ function debug(msg){
 }
 
 //load node C++ native module
-var otr=require("./otrnat");
+var otr=require("./build/Release/otrnat");
 
 if(otr.version()!="3.2.1"){
 	console.error("Warning. You are not using the latest version of libotr on your system.");

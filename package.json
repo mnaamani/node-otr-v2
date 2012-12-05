@@ -1,14 +1,18 @@
 {
-    "name" : "otr",
-    "description" : "Off-the-Record Messaging Protocol v2 (binds to native library)",
-    "url" : "https://github.com/mnaamani/node-otr-v2",
-    "keywords" : ["crypto","otr","privacy"],
-    "author" : "Mokhtar Naamani",
-    "contributors" : ["Mokhtar Naamani <mokhtar.naamani@gmail.com>"],
-    "dependencies" : {},
+    "name" : "otr3",
     "version" : "0.0.1",
-    "main" : "./lib/otr",
-    "directories" : {},
+    "description" : "Off-the-Record Messaging Protocol [native libotr3.2.x]",
+    "url" : "https://github.com/mnaamani/node-otr-v2",
+    "keywords" : ["crypto","otr","privacy","off the record","otrm"],
+    "author" : "Mokhtar Naamani <mokhtar.naamani@gmail.com>",
+    "main" : "index.js",
     "license": "GPLv2",
-    "engines" : { "node" : ">=0.6.0" }
+    "engines" : { "node" : ">=0.6.0" },
+    "repository":{
+        "type":"git",
+        "url":"git@github.com:mnaamani/node-otr-v2.git"
+    },
+    "scripts":{
+        "preinstall":"make module"
+    }
 }
