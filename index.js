@@ -148,84 +148,44 @@ function OtrEventHandler( otrChannel ){
     otrChannel.emit.apply(otrChannel,arguments);
  }
  return (function(o){
-    //console.error(o.EVENT);
+    debug(o.EVENT);
     switch(o.EVENT){
-        case "smp_request":
-            if(o.question) debug("SMP Question:"+o.question);
-            emit(o.EVENT,o.question);
-            return;
-        case "smp_complete":
-            debug(o.EVENT);
-            emit(o.EVENT);
-            return;
-        case "smp_failed":
-            debug(o.EVENT);
-            emit(o.EVENT);
-            return;
-        case "smp_aborted":
-            debug(o.EVENT);
-            emit(o.EVENT);
-            return;        
-        case "is_logged_in":
-            //TODO:function callback. for now remote party is always assumed to be online
-            return 1;
-        case "gone_secure":
-            debug(o.EVENT);
-            emit(o.EVENT);
-            return;
-        case "gone_insecure":
-            debug(o.EVENT);
-            emit(o.EVENT);
-            return;
-        case "remote_disconnected":
-            debug(o.EVENT);
-            emit(o.EVENT);
-            return;
-        case "policy":                  
-            if(!otrChannel.parameters) return POLICY("DEFAULT");
-            if(typeof otrChannel.parameters.policy == 'number' ) return otrChannel.parameters.policy;//todo: validate policy
-            return POLICY("DEFAULT");
-        case "update_context_list":
-            debug(o.EVENT);
-            emit(o.EVENT);
-            return;
-        case "max_message_size":
-            if(!otrChannel.parameters) return 0; //No fragmentation
-            return otrChannel.parameters.MTU || 0;//No fragmentation
-        case "inject_message":
-            //debug("INJECT:"+o.message);
-            emit(o.EVENT,o.message);
-            return;
-        case "create_privkey":
-            debug(o.EVENT);
-            emit(o.EVENT);
-            return;
-        case "display_otr_message":
-            debug("OTR_MESSAGE:"+o.message);
-            emit(o.EVENT,o.message);
-            return;            
-        case "notify":
-            debug("OTR_NOTIFY:"+o.title+"-"+o.primary);
-            emit(o.EVENT,o.title,o.primary,o.secondary);
-            return;
-        case "log_message":
-            debug("OTR DEBUG:"+o.message);
-            emit(o.EVENT,o.message);
-            return;
-        case "new_fingerprint":
-            debug(o.fingerprint);
-            emit(o.EVENT,o.fingerprint);
-            return;
+        //custom events - raised by ops.messageReceiving() 
+        case "smp_request":         emit(o.EVENT,o.question);break;
+        case "smp_complete":        emit(o.EVENT);break;
+        case "smp_failed":          emit(o.EVENT);break;
+        case "smp_aborted":         emit(o.EVENT);break;
+        case "remote_disconnected": emit(o.EVENT);break;
+        //message operations
+        case "gone_secure":         emit(o.EVENT);break;
+        case "gone_insecure":       emit(o.EVENT);break;
+        case "still_secure":        emit(o.EVENT);break;
+        case "update_context_list": emit(o.EVENT);break;
+        case "inject_message":      emit(o.EVENT,o.message);break;
+        case "create_privkey":      emit(o.EVENT);break;
+        case "display_otr_message": emit(o.EVENT,o.message);break;
+        case "notify":              emit(o.EVENT,o.title,o.primary,o.secondary);break;
+        case "log_message":         emit(o.EVENT,o.message);break;
+        case "new_fingerprint":     emit(o.EVENT,o.fingerprint);break;
         case "write_fingerprints":
-            debug(o.EVENT);
             otrChannel.user.writeFingerprints();
-            return;
-        case "still_secure":
-            debug(o.EVENT);
-            emit(o.EVENT);
-            return;
+            emit(o.EVENT);//event handled raise event anyway
+            break;
+        case "is_logged_in":        return 1;break;//assume remote buddy is logged in.
+        case "policy":
+            //if no policy specified, default to DEFAULT policy
+            if(!otrChannel.parameters) return POLICY("DEFAULT");
+            if(typeof otrChannel.parameters.policy == 'number' ){
+                return otrChannel.parameters.policy;
+            }
+            return POLICY("DEFAULT");
+        case "max_message_size":
+            //fragment size : default no fragmentation
+            if(!otrChannel.parameters) return 0;
+            return otrChannel.parameters.MTU || 0;
         default:
-            console.error("UNHANDLED EVENT:",o.EVENT);
+            //test that we handled all the operations
+            debug("Unhandled Message Operation:",o.EVENT);
             return;
     }
  });
@@ -251,5 +211,3 @@ _policy['DEFAULT'] = _policy['OPPORTUNISTIC']
 function POLICY(p){  
     return _policy[p];
 };
-
-
