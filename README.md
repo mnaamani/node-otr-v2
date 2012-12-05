@@ -1,8 +1,8 @@
-# Off-the-Record Messaging [protocol v2]
-# NodeJs Module
+# OTR3 - Off-the-Record Messaging [protocol v2]
+# Nodejs bindings
 
 This module exposes a simple evented API which wraps the native libotr installed.
-Supports only versions v3.2.x of library. (v4 is not backwards compatible)
+Supports only versions v3.2.x of library.
 
 Only tested on Ubuntu. (If you can help to make it build on windows please do).
 
@@ -15,16 +15,21 @@ Required tools:
 	$ apt-get install nodejs nodejs-dev libotr2 libotr2-dev
 
 node-gyp:
+
 	$ npm install -g node-gyp
 
-Build and install the node module (locally):
+install the module with npm:
 
-	make
-	make install
+    npm -g install
 
 Run a quick test
 
 	node examples/test.js
+
+
+You can also install the module directly from npm registry:
+
+    npm -g install otr3
 
 
 ## API
