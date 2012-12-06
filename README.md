@@ -1,4 +1,4 @@
-# OTR3 - Off-the-Record Messaging [protocol v2][native bindings]
+## OTR3 - Off-the-Record Messaging [native-bindings]
 
 This module exposes a simple evented API which wraps the native libotr installed.
 Supports only versions v3.2.x of library.
@@ -7,33 +7,27 @@ Only tested on Ubuntu. (If you can help to make it build on windows please do).
 
 Still a work in progress..
 
-## Building the module
-
-Required tools:
+### Install pre-requisits:
 
 	$ apt-get install nodejs nodejs-dev libotr2 libotr2-dev
-
-node-gyp:
-
 	$ npm install -g node-gyp
+	
+### Getting the Module through git:
 
-install the module with npm:
+	git clone https://github.com/mnaamani/node-otr-v2.git
+	cd node-otr-v2/
+	npm -g install
 
-    npm -g install
+### Getting the module directly from npm registry:
 
-Run a quick test
+	npm -g install otr3
 
-	node examples/test.js
+[API Documentation](https://github.com/mnaamani/node-otr-v2/blob/master/doc/API.md)
 
-
-You can also install the module directly from npm registry:
-
-    npm -g install otr3
-
-## License
+### License
 GPLv2
 
-## Links
+### Links
 The Excellent OTR Messaging software:
 http://www.cypherpunks.ca/otr/
 
