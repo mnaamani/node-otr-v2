@@ -145,7 +145,7 @@ The following properties of the ConnContext object are exposed (Read-Only):
   
 ## OTRChannel
 OTRChannel creates a simple interface for exchanging messages with a buddy. As arguments
-it takes a UserState,ConnContext,and a dictionary of parameters for the channel:
+it takes a User,ConnContext,and a dictionary of parameters for the channel:
 
     var otrchannel = new libotr.OTRChannel(alice, BOB, {
         policy:libotr.POLICY("ALWAYS"), //optional policy - default = POLICY("DEFAULT")
