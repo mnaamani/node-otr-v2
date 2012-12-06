@@ -57,7 +57,7 @@ If you need to generate a new OTR key for a given accountname and protocol:
 
     alice.generateKey("alice@jabber.org", "xmpp", function(err){
         //callback function
-        //if error occured err will be the text representation of gcrypt error number.
+        //if an error occured err will be the GPG error string.
         //otherwise err will be 'null'
     });
 
@@ -110,7 +110,7 @@ Synchronously reads the stored fingerprints into the userstate.
 ### userstate.writeFingerprintsSync(path_to_fingerprints_file)
 Synchronously writes out the fingerprints in userstate to file.
 
-(Async versions.. Not Recommended to Use..)
+(Async versions.. Not Recommended)
 ### userstate.readKeys(path_to_keys_file, [callback])
 Asynchronously reads the stored keys into the userstate.
 
@@ -120,15 +120,13 @@ Asynchronously reads the stored fingerprints into the userstate.
 ### userstate.writeFingerprints(path_to_fingerprints_file, [callback])
 Asynchronously writes out the fingerprints in userstate to file.
 
-example code: https://github.com/mnaamani/node-telehash/blob/master/experiment/otr-keymanager.js
-
 ## ConnContext
-A ConnContext with a recipient 'BOB' for a given UserState (userstate) can be created as follows:
+A ConnContext with a buddy 'BOB' for a given UserState (userstate) can be created as follows:
 
     var ctx = new libotr.ConnContext(userstate, "alice@jabber.org","xmpp","BOB" );
 
 where the second and third arguments specifiy which OTR key to use. The last argument is
-our selected name for the recipient Bob;
+our selected name for the buddy Bob;
 
 Or from a User object (alice):
 
@@ -146,28 +144,28 @@ The following properties of the ConnContext object are exposed (Read-Only):
 * trust: string: 'smp' if recipient's fingerprint has been verified by SMP.
   
 ## OTRChannel
-OTRChannel creates a simple interface for exchanging messages with a recipient. As arguments
+OTRChannel creates a simple interface for exchanging messages with a buddy. As arguments
 it takes a UserState,ConnContext,and a dictionary of parameters for the channel:
 
     var otrchannel = new libotr.OTRChannel(alice, BOB, {
         policy:libotr.POLICY("ALWAYS"), //optional policy - default = POLICY("DEFAULT")
-        MTU:1450,          //optional - max fragment size in bytes - default = 1450
-        secret:"SECRET",   //secret for SMP authentication.                           
+        MTU:5000,          //optional - max fragment size in bytes- default = 0, no fragmentation
+        secret:"SECRET",   //secret for SMP authentication.
         secrets:{'question-1':'secret-1',
-                 'question-2':'secret-2'} //questions and answers also for SMP Authentication.
+                 'question-2':'secret-2'} //question, answer pairs for SMP authentication.
     });
 
 ### Methods:
 
 ### otrchan.connect()
-connect() will initiate the otr protocol with remote side.
+connect() will initiate the otr protocol with the buddy.
 This can be used if we wish to initiate the protocol without sending an actual message.
 
 ### otrchan.send(message)
-send() will fragment and send message.toString() to remote side.
+send() will fragment and send message.toString().
 
 ### otrchan.recv(message)
-call recv() when receiving message from remote side.
+call recv() when receiving message from our buddy.
 
 ### otrchan.close()
 close() will shutdown the otr channel.
@@ -191,36 +189,27 @@ return 'true' only if fingerprint of remote side has been authenticated/verified
 
 ### Events
 
-* message(msg) - msg from recipient to be displayed to the user.
+* message(msg) - received decrypted 'msg' message.
 
-* inject_message(msg_fragment) - msg_fragment to be sent down the communication channel to recipient.
+* inject_message(msg_fragment) - msg_fragment to be sent on the channel.
 
 * gone_secure() - message exchange is now encrypted.
 * gone_insecure() - message exchange is now in plain text.
 * still_secure() - encryption re-negotiated. message exchange is encrypted.
 
 * create_privkey() - a private key for account/protocol specified was not found and needs to be created.
-* new_fingerprint(fingerprint) - first time we are seeing remote party's fingerprint. This is a que to begin authentication.
+* new_fingerprint(fingerprint) - first time we are seeing remote buddy's fingerprint. This is a que to begin authentication.
 
-* smp_request(question) - remote party has started a SMP authentication. (possibly with a question)
-* smp_complete() - indicates SMP authentication completed successfully.
-* smp_failed() - SMP failed (usually remote party doesn't know the secret)
+* smp_request(question) - buddy has started a SMP authentication. (possibly with a question)
+* smp_complete() - SMP authentication completed successfully.
+* smp_failed() - SMP failed (usually buddy doesn't know the secret)
 * smp_aborted() - SMP (something went wrong at the protocol level)
 
-* remote_disconnected() - remote side has closed() the channel
-* update_context_list() - fired when context changes (inteded mostly for UI updates)
-* shutdown() - channel was forcefully closed.
+* remote_disconnected() - channel closed() remotely.
+* update_context_list() - fired when underlying ConnContext changes (inteded mostly for UI updates)
+* shutdown() - channel was closed (locally)
 
 * display_otr_message(msg) //human readable notification message
 * notify(title,primary,secondary) //notification (fired after display_otr_message for same notification message)
 * log_message(msg) //debug log messages from libotr
-
-
-## MessageAppOps
-### messageSending()
-### messageReceiving()
-### fragmentAndSend()
-### disconnect()
-### initSMP()
-### respondSMP()
 
