@@ -41,7 +41,8 @@ var events = require('events');
 exports.version = otr.version;
 exports.UserState = otr.UserState;
 exports.ConnContext = otr.ConnContext;
-exports.MessageAppOps = otr.MessageAppOps;
+//discourage direct use of otr.MessageAppOps - keep it internal
+//exports.MessageAppOps = otr.MessageAppOps;
 
 //high level - javascript API
 exports.User = User;
