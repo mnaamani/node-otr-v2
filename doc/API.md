@@ -1,4 +1,4 @@
-# OTR3 - Off-the-Record Messaging [protocol v2][native bindings]
+# OTR3 - Off-the-Record Messaging [native bindings]
 
 The module exports the following functions:
 
