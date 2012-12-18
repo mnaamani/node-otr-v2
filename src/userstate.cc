@@ -170,7 +170,7 @@ Handle<Value> UserState::Read_Keys(const Arguments& args) {
   baton->arg0 = cvv8::CastFromJS<std::string>(args[0]);//filename
   baton->userstate = obj->userstate_;
 
-  int status = uv_queue_work(uv_default_loop(), &baton->request, Worker_Read_Keys, Worker_After);
+  int status = uv_queue_work(uv_default_loop(), &baton->request, Worker_Read_Keys, (uv_after_work_cb)Worker_After);
   assert(status == 0);
 
   return scope.Close(Undefined());
@@ -217,7 +217,7 @@ Handle<Value> UserState::Read_Fingerprints(const Arguments& args) {
   baton->arg0 = cvv8::CastFromJS<std::string>(args[0]);//filename
   baton->userstate = obj->userstate_;
 
-  int status = uv_queue_work(uv_default_loop(), &baton->request, Worker_Read_Fingerprints, Worker_After);
+  int status = uv_queue_work(uv_default_loop(), &baton->request, Worker_Read_Fingerprints, (uv_after_work_cb)Worker_After);
   assert(status == 0);
 
   return scope.Close(Undefined());
@@ -265,7 +265,7 @@ Handle<Value> UserState::Write_Fingerprints(const Arguments& args) {
   baton->arg0 = cvv8::CastFromJS<std::string>(args[0]);//filename
   baton->userstate = obj->userstate_;
 
-  int status = uv_queue_work(uv_default_loop(), &baton->request, Worker_Write_Fingerprints, Worker_After);
+  int status = uv_queue_work(uv_default_loop(), &baton->request, Worker_Write_Fingerprints, (uv_after_work_cb)Worker_After);
   assert(status == 0);
 
   return Undefined();
@@ -307,7 +307,7 @@ Handle<Value> UserState::Generate_Key(const Arguments& args) {
   baton->arg2 = cvv8::CastFromJS<std::string>(args[2]);//protocol
   baton->userstate = obj->userstate_;
 
-  int status = uv_queue_work(uv_default_loop(), &baton->request, Worker_Generate_Key, Worker_After);
+  int status = uv_queue_work(uv_default_loop(), &baton->request, Worker_Generate_Key, (uv_after_work_cb)Worker_After);
   assert(status == 0);
 
   return Undefined();

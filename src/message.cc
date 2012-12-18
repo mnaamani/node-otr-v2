@@ -642,7 +642,7 @@ void MessageAppOps::QueEvent(Local<Object> obj, Persistent<Function> callback){
     //baton->callback = Persistent<Function>::New(callback);
     baton->callback = callback;
     baton->event = Persistent<Object>::New(obj);
-    int status = uv_queue_work(uv_default_loop(), &baton->request, NULL, FireEvent);
+    int status = uv_queue_work(uv_default_loop(), &baton->request, NULL, (uv_after_work_cb)FireEvent);
     assert(status == 0);
 }
 void MessageAppOps::FireEvent(uv_work_t* req){
