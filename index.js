@@ -46,13 +46,13 @@ exports.ConnContext = otr.ConnContext;
 
 //high level - javascript API
 exports.User = User;
+export.Session = OTRChannel;
 exports.OTRChannel = OTRChannel;
 exports.POLICY = POLICY;
 
 util.inherits(OTRChannel, events.EventEmitter);
 
 function User( config ){
-    this.name = config.name;    
     this.state = new otr.UserState();
     this.keys = config.keys;
     this.fingerprints = config.fingerprints;
