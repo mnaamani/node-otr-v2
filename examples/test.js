@@ -1,8 +1,6 @@
 var libotr = require('otr3');
 console.log("libotr version:",libotr.version());
 
-var TEST_PASSED=false;
-
 var verbose = true;//TODO: read command line param -v / --verbose 
 
 if(verbose){
@@ -26,7 +24,8 @@ var otrchan_b = new libotr.OTRChannel(bob, ALICE,{policy:libotr.POLICY("ALWAYS")
 console.log("Alice's OTR fingerprint:",alice.state.fingerprint("alice@telechat.org","telechat"));
 console.log("Bob's OTR fingerprint:",bob.state.fingerprint("bob@telechat.org","telechat"));
 
-console.log(ALICE.accountname,"<==>",BOB.accountname);
+console.log(alice.accounts());
+console.log(bob.accounts());
 
 //dump the OTR channel objects
 console.log(otrchan_a);
@@ -69,7 +68,7 @@ otrchan_b.on("shutdown",function(){
 //because otrchan_b was closed otrchan_a get a remote_disconnect event.
 otrchan_a.on("remote_disconnected",function(){
     console.log("Bob disconnected");
-    exit_test("");
+    exit_test(true);
 });
 
 //connection is encrypted..
@@ -86,31 +85,42 @@ otrchan_b.on("smp_request",function(){
     this.respond_smp('s3cr37');
 });
 
+otrchan_a.on("create_privkey",function(account,protocol){
+    console.log("Alice doesn't have a key for",account,protocol," creating one now..");
+    alice.generateKey(account,protocol,function(err){
+        if(err){
+            console.log(err);
+        }
+        console.log("Key Generation Done.");
+        //restart the OTR conversation
+        otrchan_a.connect();        
+    });
+    console.log("handled create_privkey");
+});
+otrchan_b.on("create_privkey",function(account,protocol){
+    console.log("Bob  doesn't have a key for",account,protocol," creating one now..");
+    bob.generateKey(account,protocol,function(err){
+        if(err){
+            console.log(err);
+        }
+        console.log("Key Generation Done.");
+        //restart the OTR conversation
+        otrchan_b.connect();
+    });
+    console.log("handled create_privkey");
+});
 
-//alice sends a message to bob
-otrchan_a.send("Hello, World!"); //will get reset encrypted
+
+otrchan_a.connect();
 
 var loop = setInterval(function(){
     if(otrchan_a.isEncrypted() && otrchan_a.isAuthenticated()){
-        console.log("Finger print verification successful");
-        dumpConnContext(otrchan_a,"Alice's ConnContext:");
-        dumpConnContext(otrchan_b,"Bob's ConnContext:");   
-        TEST_PASSED=true;        
-        if(loop) clearInterval(loop);        
-        //otrchan_b.send("Meet me at midnight...near the docks...");                
+        if(loop) clearInterval(loop);
         otrchan_b.close();
     }
-},500);
+},1000);
 
-var test_timeout = setTimeout(function(){
-    if(loop) clearInterval(loop);
-    exit_test("Timeout! - try again..");//usually something went wrong during SMP authentication
-},10000);
-
-function exit_test(msg){
-    dumpConnContext(otrchan_a,"Alice's ConnContext:");
-    dumpConnContext(otrchan_b,"Bob's ConnContext:");
-    console.log(msg);
+function exit_test(TEST_PASSED){
     if(TEST_PASSED){ console.log("== TEST PASSED ==\n"); } else { console.log("== TEST FAILED ==\n"); }
     process.exit();
 }

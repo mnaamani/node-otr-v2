@@ -442,7 +442,7 @@ void MessageAppOps::op_create_privkey(void *opdata, const char *accountname, con
     eobj->Set(String::NewSymbol("accountname"), String::New(accountname));
     eobj->Set(String::NewSymbol("protocol"), String::New(protocol));
 
-    QueEvent(eobj,ops->ui_event_);
+    SyncEvent(eobj,ops->ui_event_);
 }
 
 int MessageAppOps::op_is_logged_in(void *opdata, const char *accountname,const char *protocol, const char *recipient){    
@@ -558,7 +558,7 @@ void MessageAppOps::op_new_fingerprint(void *opdata, OtrlUserState us,	const cha
     otrl_privkey_hash_to_human(human, fingerprint);
     eobj->Set(String::NewSymbol("fingerprint"), String::New(human));
 
-    QueEvent(eobj,ops->ui_event_);
+    SyncEvent(eobj,ops->ui_event_);
 }
 
 void MessageAppOps::op_write_fingerprints(void *opdata){    
@@ -567,7 +567,7 @@ void MessageAppOps::op_write_fingerprints(void *opdata){
     Local<Object> eobj = Object::New();
     eobj->Set(String::NewSymbol("EVENT"),String::New("write_fingerprints"));
 
-    QueEvent(eobj,ops->ui_event_);
+    SyncEvent(eobj,ops->ui_event_);
 }
 
 void MessageAppOps::op_gone_secure(void *opdata, ConnContext *context){    
@@ -636,6 +636,18 @@ void MessageAppOps::contextSecureStatusUpdate(void *opdata, ConnContext* context
     QueEvent(eobj,ops->ui_event_);
 }
 
+void MessageAppOps::SyncEvent(Local<Object> obj, Persistent<Function> callback){
+    HandleScope scope;
+    const unsigned argc = 1;
+    Local<Value> argv[argc] = { obj };
+    TryCatch try_catch;
+    callback->Call(Context::GetCurrent()->Global(), argc, argv);
+    if (try_catch.HasCaught()) {
+        puts(">> Node Fatal Exception <<");
+        node::FatalException(try_catch);
+    }
+    scope.Close(Undefined());
+}
 void MessageAppOps::QueEvent(Local<Object> obj, Persistent<Function> callback){
     EventBaton *baton = new EventBaton();
     baton->request.data = baton;

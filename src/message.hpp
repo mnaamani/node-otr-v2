@@ -73,10 +73,12 @@ class MessageAppOps : public node::ObjectWrap {
     static v8::Handle<v8::Value> Respond_SMP(const v8::Arguments& args);
 
     static void QueEvent(v8::Local<v8::Object> obj, v8::Persistent<v8::Function> callback);
-    static void FireEvent(uv_work_t* req);    
+    static void FireEvent(uv_work_t* req);
+    static void SyncEvent(v8::Local<v8::Object> obj, v8::Persistent<v8::Function> callback);
+
 };
 
-struct EventBaton {    
+struct EventBaton {
     uv_work_t request;
     v8::Persistent<v8::Function> callback;
     v8::Persistent<v8::Object> event;

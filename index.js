@@ -77,6 +77,9 @@ User.prototype.writeFingerprints = function(){
     this.state.writeFingerprintsSync(this.fingerprints);
 }
 
+User.prototype.accounts = function(){
+    return this.state.accounts();
+};
 function OTRChannel(user, context, parameters){
     events.EventEmitter.call(this);
     
@@ -87,7 +90,7 @@ function OTRChannel(user, context, parameters){
     
 }
 OTRChannel.prototype.connect = function(){
-    return this.send("");
+    return this.send("?OTR?");
 };
 OTRChannel.prototype.send = function(message){
     //message can be any object that can be serialsed to a string using it's .toString() method.   
@@ -163,7 +166,7 @@ function OtrEventHandler( otrChannel ){
         case "still_secure":        emit(o.EVENT);break;
         case "update_context_list": emit(o.EVENT);break;
         case "inject_message":      emit(o.EVENT,o.message);break;
-        case "create_privkey":      emit(o.EVENT);break;
+        case "create_privkey":      emit(o.EVENT,o.accountname,o.protocol);break;
         case "display_otr_message": emit(o.EVENT,o.message);break;
         case "notify":              emit(o.EVENT,o.title,o.primary,o.secondary);break;
         case "log_message":         emit(o.EVENT,o.message);break;
