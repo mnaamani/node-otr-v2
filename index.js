@@ -46,7 +46,7 @@ exports.ConnContext = otr.ConnContext;
 
 //high level - javascript API
 exports.User = User;
-export.Session = OTRChannel;
+exports.Session = OTRChannel;
 exports.OTRChannel = OTRChannel;
 exports.POLICY = POLICY;
 
