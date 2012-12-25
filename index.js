@@ -73,13 +73,17 @@ User.prototype.ConnContext = function(accountname, protocol, recipient){
 }
 
 User.prototype.writeFingerprints = function(){
-    console.error("Writing Fingerprints to:",this.fingerprints);
     this.state.writeFingerprintsSync(this.fingerprints);
 }
 
 User.prototype.accounts = function(){
     return this.state.accounts();
 };
+
+User.prototype.fingerprint = function(accountname,protocol){
+    return this.state.fingerprint(accountname,protocol);
+};
+
 function OTRChannel(user, context, parameters){
     events.EventEmitter.call(this);
     
@@ -104,7 +108,7 @@ OTRChannel.prototype.send = function(message){
 OTRChannel.prototype.recv = function(message){
     //message can be any object that can be serialsed to a string using it's .toString() method.
     var msg = this.ops.messageReceiving(this.user.state, this.context.accountname, this.context.protocol, this.context.username, message.toString());
-    if(msg) this.emit("message",msg);
+    if(msg) this.emit("message",msg, this.isEncrypted());
 };
 OTRChannel.prototype.close = function(){
     this.ops.disconnect(this.user.state,this.context.accountname,this.context.protocol,this.context.username);
@@ -173,7 +177,6 @@ function OtrEventHandler( otrChannel ){
         case "new_fingerprint":     emit(o.EVENT,o.fingerprint);break;
         case "write_fingerprints":
             otrChannel.user.writeFingerprints();
-            emit(o.EVENT);//event handled raise event anyway
             break;
         case "is_logged_in":        return 1;break;//assume remote buddy is logged in.
         case "policy":
