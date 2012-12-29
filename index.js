@@ -115,11 +115,14 @@ OTRChannel.prototype.close = function(){
     this.emit("shutdown");
 };
 OTRChannel.prototype.start_smp = function(secret){
-    var sec = secret || this.parameters? this.parameters.secret:undefined || undefined;
-    if(!sec) throw( new Error("No Secret Provided"));
-    this.ops.initSMP(this.user.state, this.context, sec);
+    var sec = secret;
+    sec = sec || (this.parameters? this.parameters.secret:undefined);
+    if(sec){
+        this.ops.initSMP(this.user.state, this.context, sec);
+    }else{
+        throw( new Error("No Secret Provided"));
+    }
 };
-
 OTRChannel.prototype.start_smp_question = function(question,secret){
     if(!question){
         throw(new Error("No Question Provided"));        
