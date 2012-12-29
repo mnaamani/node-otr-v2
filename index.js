@@ -179,7 +179,8 @@ function OtrEventHandler( otrChannel ){
         case "log_message":         emit(o.EVENT,o.message);break;
         case "new_fingerprint":     emit(o.EVENT,o.fingerprint);break;
         case "write_fingerprints":
-            otrChannel.user.writeFingerprints();
+            //otrChannel.user.writeFingerprints();
+            emit(o.EVENT);//app will decide to write fringerprints or not.
             break;
         case "is_logged_in":        return 1;break;//assume remote buddy is logged in.
         case "policy":
