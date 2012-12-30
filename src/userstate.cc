@@ -62,7 +62,7 @@ void UserState::Init(Handle<Object> target) {
   NODE_SET_PROTOTYPE_METHOD(constructor, "readKeysSync",Read_Keys_Sync);
   NODE_SET_PROTOTYPE_METHOD(constructor, "readFingerprintsSync",Read_Fingerprints_Sync);
   NODE_SET_PROTOTYPE_METHOD(constructor, "writeFingerprintsSync",Write_Fingerprints_Sync);
-  //NODE_SET_PROTOTYPE_METHOD(constructor, "destroy",Destroy);
+  NODE_SET_PROTOTYPE_METHOD(constructor, "free",Free);
     
   target->Set(name, constructor->GetFunction());
 }
@@ -76,7 +76,7 @@ Handle<Value> UserState::New(const Arguments& args) {
   return args.This();
 }
 
-Handle<Value> UserState::Destroy(const Arguments &args){
+Handle<Value> UserState::Free(const Arguments &args){
   HandleScope scope;
   UserState* obj = ObjectWrap::Unwrap<UserState>(args.This());
   if(obj->userstate_!=NULL) otrl_userstate_free(obj->userstate_);
