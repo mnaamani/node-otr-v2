@@ -33,7 +33,7 @@ UserState::UserState(OtrlUserState userstate) : ObjectWrap(),
       userstate_(userstate) {};
 
 UserState::~UserState(){
-    if(!reference){        
+    if(!reference){
         if(userstate_!=NULL) {
             otrl_userstate_free(userstate_);
         }
@@ -46,24 +46,25 @@ void UserState::Init(Handle<Object> target) {
   // Prepare constructor template
   Local<FunctionTemplate> tpl = FunctionTemplate::New(New);
   Local<String> name = String::NewSymbol("UserState");
-  
+
   constructor = Persistent<FunctionTemplate>::New(tpl);
   // ObjectWrap uses the first internal field to store the wrapped pointer.
   constructor->InstanceTemplate()->SetInternalFieldCount(1);
-  constructor->SetClassName(name);  
- 
+  constructor->SetClassName(name);
+
   NODE_SET_PROTOTYPE_METHOD(constructor, "generateKey",Generate_Key);
   NODE_SET_PROTOTYPE_METHOD(constructor, "readKeys",Read_Keys);
   NODE_SET_PROTOTYPE_METHOD(constructor, "readFingerprints",Read_Fingerprints);
   NODE_SET_PROTOTYPE_METHOD(constructor, "writeFingerprints",Write_Fingerprints);
- 
-  NODE_SET_PROTOTYPE_METHOD(constructor, "fingerprint",Fingerprint);
+
+  NODE_SET_PROTOTYPE_METHOD(constructor, "fingerprint",GetFingerprint);
   NODE_SET_PROTOTYPE_METHOD(constructor, "accounts",Accounts);
   NODE_SET_PROTOTYPE_METHOD(constructor, "readKeysSync",Read_Keys_Sync);
   NODE_SET_PROTOTYPE_METHOD(constructor, "readFingerprintsSync",Read_Fingerprints_Sync);
   NODE_SET_PROTOTYPE_METHOD(constructor, "writeFingerprintsSync",Write_Fingerprints_Sync);
+  NODE_SET_PROTOTYPE_METHOD(constructor, "writeTrustedFingerprintsSync",Write_Fingerprints_Sync);
   NODE_SET_PROTOTYPE_METHOD(constructor, "free",Free);
-    
+
   target->Set(name, constructor->GetFunction());
 }
 
@@ -93,7 +94,7 @@ Handle<Value> UserState::WrapUserState(OtrlUserState userstate)
         return o;
 }
 
-Handle<Value> UserState::Fingerprint(const Arguments& args) {
+Handle<Value> UserState::GetFingerprint(const Arguments& args) {
   HandleScope scope;
   UserState* obj = ObjectWrap::Unwrap<UserState>(args.This());
 
@@ -274,6 +275,49 @@ Handle<Value> UserState::Write_Fingerprints(const Arguments& args) {
 void UserState::Worker_Write_Fingerprints(uv_work_t* req){
   Baton* baton = static_cast<Baton*>(req->data);
   baton->error = otrl_privkey_write_fingerprints(baton->userstate, baton->arg0.c_str());
+}
+
+Handle<Value> UserState::Write_Trusted_Fingerprints_Sync(const Arguments& args) {
+  HandleScope scope;
+  UserState* obj = ObjectWrap::Unwrap<UserState>(args.This());
+  OtrlUserState us = obj->userstate_;
+  FILE *storef;
+  ConnContext *context;
+  Fingerprint *fingerprint;
+  gcry_error_t error;
+
+  if(!args.Length() > 0 || !args[0]->IsString()){
+    return scope.Close(V8EXCEPTION("Invalid arguments. One argument 'filename' (string) excpected."));
+  }
+  String::Utf8Value filename(args[0]->ToString());
+
+  storef = fopen(*filename, "wb");
+
+  if (!storef) {
+    error = gcry_error_from_errno(errno);
+  }else{
+
+    for(context = us->context_root; context; context = context->next) {
+
+      /* Don't bother with the first (fingerprintless) entry. */
+      for (fingerprint = context->fingerprint_root.next; fingerprint && fingerprint->trust;
+        fingerprint = fingerprint->next) {
+        int i;
+        fprintf(storef, "%s\t%s\t%s\t", context->username,
+            context->accountname, context->protocol);
+        for(i=0;i<20;++i) {
+        fprintf(storef, "%02x", fingerprint->fingerprint[i]);
+        }
+        fprintf(storef, "\t%s\n", fingerprint->trust ? fingerprint->trust : "");
+      }
+    }
+
+    error = gcry_error(GPG_ERR_NO_ERROR);
+    fclose(storef);
+  }
+
+  if(error) return scope.Close(GCRY_EXCEPTION(error));
+  return scope.Close(Undefined());
 }
 
 Handle<Value> UserState::Generate_Key(const Arguments& args) {

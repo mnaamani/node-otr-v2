@@ -38,10 +38,10 @@ class UserState : public node::ObjectWrap {
   friend class ConnectionCtx;
   OtrlUserState userstate_;
   bool reference;
-  
+
   UserState(OtrlUserState userstate);
   ~UserState();
-  
+
   static v8::Handle<v8::Value> New(const v8::Arguments& args);
   static v8::Handle<v8::Value> WrapUserState(OtrlUserState userstate);
   static v8::Handle<v8::Value> Destroy(const v8::Arguments &args);
@@ -51,24 +51,25 @@ class UserState : public node::ObjectWrap {
   static v8::Handle<v8::Value> Read_Fingerprints(const v8::Arguments& args);
   static v8::Handle<v8::Value> Write_Fingerprints(const v8::Arguments& args);
   //Sync
-  static v8::Handle<v8::Value> Fingerprint(const v8::Arguments& args);
+  static v8::Handle<v8::Value> GetFingerprint(const v8::Arguments& args);
   static v8::Handle<v8::Value> Accounts(const v8::Arguments& args);
-  static v8::Handle<v8::Value> Get_Key(const v8::Arguments& args);     
+  static v8::Handle<v8::Value> Get_Key(const v8::Arguments& args);
   static v8::Handle<v8::Value> Read_Keys_Sync(const v8::Arguments& args);
   static v8::Handle<v8::Value> Read_Fingerprints_Sync(const v8::Arguments& args);
-  static v8::Handle<v8::Value> Write_Fingerprints_Sync(const v8::Arguments& args);  
+  static v8::Handle<v8::Value> Write_Fingerprints_Sync(const v8::Arguments& args);
+  static v8::Handle<v8::Value> Write_Trusted_Fingerprints_Sync(const v8::Arguments& args);
   static v8::Handle<v8::Value> Free(const v8::Arguments& args);
   //Workers
   static void Worker_Generate_Key (uv_work_t* req);
   static void Worker_Read_Keys (uv_work_t* req);
   static void Worker_Read_Fingerprints (uv_work_t* req);
   static void Worker_Write_Fingerprints (uv_work_t* req);
-  static void Worker_After (uv_work_t* req);  
-  
+  static void Worker_After (uv_work_t* req);
+
 };
 
 //information about the asynchronous "work request".
-struct Baton {    
+struct Baton {
     uv_work_t request;
     bool hasCallback;
     v8::Persistent<v8::Function> callback;

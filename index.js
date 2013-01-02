@@ -75,6 +75,9 @@ User.prototype.ConnContext = function(accountname, protocol, recipient){
 User.prototype.writeFingerprints = function(){
     this.state.writeFingerprintsSync(this.fingerprints);
 }
+User.prototype.writeTrustedFingerprints = function(){
+    this.state.writeTrustedFingerprintsSync(this.fingerprints);
+}
 
 User.prototype.accounts = function(){
     return this.state.accounts();
