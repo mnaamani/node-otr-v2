@@ -16,11 +16,11 @@ Still a work in progress..
 
 	git clone https://github.com/mnaamani/node-otr-v2.git
 	cd node-otr-v2/
-	npm -g install
+	npm install
 
 ### Getting the module directly from npm registry:
 
-	npm -g install otr3
+	npm install otr3
 
 [API Documentation](https://github.com/mnaamani/node-otr-v2/blob/master/doc/API.md)
 
