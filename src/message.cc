@@ -27,6 +27,9 @@ extern "C" {
 using namespace v8;
 
 namespace otr {
+void NullAsyncWork(uv_work_t* req) {
+}
+
 v8::Persistent<v8::FunctionTemplate> MessageAppOps::constructor;
 
 MessageAppOps::MessageAppOps() {};
@@ -654,7 +657,7 @@ void MessageAppOps::QueEvent(Local<Object> obj, Persistent<Function> callback){
     //baton->callback = Persistent<Function>::New(callback);
     baton->callback = callback;
     baton->event = Persistent<Object>::New(obj);
-    int status = uv_queue_work(uv_default_loop(), &baton->request, NULL, (uv_after_work_cb)FireEvent);
+    int status = uv_queue_work(uv_default_loop(), &baton->request, NullAsyncWork, (uv_after_work_cb)FireEvent);
     assert(status == 0);
 }
 void MessageAppOps::FireEvent(uv_work_t* req){
