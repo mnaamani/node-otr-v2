@@ -13,6 +13,6 @@
         "url":"git@github.com:mnaamani/node-otr-v2.git"
     },
     "scripts":{
-        "preinstall":"make module"
+        "preinstall":"./build.sh"
     }
 }
