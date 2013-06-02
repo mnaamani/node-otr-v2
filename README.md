@@ -22,6 +22,11 @@ Still a work in progress..
 
     npm install otr3
 
+If the install fails because compiling failed, check that you have all the pre-requisists installed.
+After resolving the problem you must reinstall the module:
+
+    npm install otr3 --force
+
 [API Documentation](https://github.com/mnaamani/node-otr-v2/blob/master/doc/API.md)
 
 ### License
