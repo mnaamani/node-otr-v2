@@ -3,24 +3,24 @@
 This module exposes a simple evented API which wraps the native libotr installed.
 Supports only versions v3.2.x of library.
 
-Only tested on Ubuntu. (If you can help to make it build on windows please do).
+Only tested on Debian/Ubuntu. (If you can help to make it build on windows please do).
 
 Still a work in progress..
 
 ### Install pre-requisits:
 
-	$ apt-get install nodejs nodejs-dev libotr2 libotr2-dev
-	$ npm install -g node-gyp
+    $ apt-get install make awk g++ nodejs nodejs-dev libotr2 libotr2-dev
+    $ npm install -g node-gyp
 	
 ### Getting the Module through git:
 
-	git clone https://github.com/mnaamani/node-otr-v2.git
-	cd node-otr-v2/
-	npm install
+    git clone https://github.com/mnaamani/node-otr-v2.git node_modules/otr3
+    cd node_modules/otr3
+    npm install
 
 ### Getting the module directly from npm registry:
 
-	npm install otr3
+    npm install otr3
 
 [API Documentation](https://github.com/mnaamani/node-otr-v2/blob/master/doc/API.md)
 
