@@ -264,7 +264,7 @@ Handle<Value> MessageAppOps::Message_Receiving(const Arguments& args) {
   
   if(status==1) retvalue = Undefined();
   if(status==0) {
-     retvalue = (newmessage==NULL) ? (Handle<Value>)args[3] : String::New(newmessage);
+     retvalue = (newmessage==NULL) ? (Handle<Value>)args[4] : String::New(newmessage);
   }
   if(newmessage!=NULL) otrl_message_free(newmessage);
   if(tlvs!=NULL) otrl_tlv_free(tlvs);
