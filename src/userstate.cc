@@ -62,7 +62,7 @@ void UserState::Init(Handle<Object> target) {
   NODE_SET_PROTOTYPE_METHOD(constructor, "readKeysSync",Read_Keys_Sync);
   NODE_SET_PROTOTYPE_METHOD(constructor, "readFingerprintsSync",Read_Fingerprints_Sync);
   NODE_SET_PROTOTYPE_METHOD(constructor, "writeFingerprintsSync",Write_Fingerprints_Sync);
-  NODE_SET_PROTOTYPE_METHOD(constructor, "writeTrustedFingerprintsSync",Write_Fingerprints_Sync);
+  NODE_SET_PROTOTYPE_METHOD(constructor, "writeTrustedFingerprintsSync",Write_Trusted_Fingerprints_Sync);
   NODE_SET_PROTOTYPE_METHOD(constructor, "free",Free);
 
   target->Set(name, constructor->GetFunction());
