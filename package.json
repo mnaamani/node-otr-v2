@@ -1,9 +1,9 @@
 {
     "name" : "otr3",
-    "version" : "0.0.11",
-    "description" : "Off-the-Record Messaging Protocol [native libotr3.2.x]",
+    "version" : "0.0.12",
+    "description" : "OTR Messaging Protocol [native libotr3.2.x]",
     "url" : "https://github.com/mnaamani/node-otr-v2",
-    "keywords" : ["crypto","otr","privacy","off the record","otrm","protocol","encryption"],
+    "keywords" : ["crypto","otr","privacy","off the record","OTR","protocol","encryption"],
     "author" : "Mokhtar Naamani <mokhtar.naamani@gmail.com>",
     "main" : "index.js",
     "license": "GPLv2",
