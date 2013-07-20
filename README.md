@@ -7,16 +7,15 @@ Only tested on Debian/Ubuntu. (If you can help to make it build on windows pleas
 
 Still a work in progress..
 
-### Install pre-requisits:
+### Install pre-requisits (debian/ubuntu)
 
     $ apt-get install make awk g++ nodejs nodejs-dev libotr2 libotr2-dev
     $ npm install -g node-gyp
-	
-### Getting the Module through git:
 
-    git clone https://github.com/mnaamani/node-otr-v2.git node_modules/otr3
-    cd node_modules/otr3
-    npm install
+### Install pre-requisits MacOS - using [brew](http://brew.sh/)
+
+    brew install node
+    brew install libotr
 
 ### Getting the module directly from npm registry:
 
@@ -26,6 +25,12 @@ If the install fails because compiling failed, check that you have all the pre-r
 After resolving the problem you must reinstall the module:
 
     npm install otr3 --force
+
+### Getting the Module through git:
+
+    git clone https://github.com/mnaamani/node-otr-v2.git node_modules/otr3
+    cd node_modules/otr3
+    npm install
 
 [API Documentation](https://github.com/mnaamani/node-otr-v2/blob/master/doc/API.md)
 
