@@ -1,6 +1,6 @@
 {
     "name" : "otr3",
-    "version" : "0.0.12",
+    "version" : "0.0.13",
     "description" : "OTR Messaging Protocol [native libotr3.2.x]",
     "url" : "https://github.com/mnaamani/node-otr-v2",
     "keywords" : ["crypto","otr","privacy","off the record","OTR","protocol","encryption"],
